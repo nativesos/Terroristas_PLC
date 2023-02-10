@@ -16,7 +16,11 @@ internal fun LoadingBody(){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        CustomImage(imageId = R.drawable.criminal_info)
+        CustomImage(
+            imageId = R.drawable.criminal_info,
+            height = 300,
+            width = 300,
+        )
 
     }
 }

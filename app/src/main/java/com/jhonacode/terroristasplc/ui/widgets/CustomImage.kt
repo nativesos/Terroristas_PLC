@@ -10,14 +10,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomImage(imageId: Int){
+fun CustomImage(imageId: Int, height: Int, width: Int){
     Image(
         modifier = Modifier
-            .height(300.dp)
-            .width(300.dp)
-            .padding(top = 50.dp)
+            .height(height.dp)
+            .width(width.dp)
+            .padding(top = 30.dp)
         ,
         painter = painterResource(id = imageId ),
-        contentDescription = "settings"
+        contentDescription = "loading-starting"
     )
 }
