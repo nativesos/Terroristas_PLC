@@ -8,17 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jhonacode.terroristasplc.ui.widgets.CustomTitle
 
-
 @Composable
-fun LoadingHeader(){
-
+fun StartingHeader(){
     Box(
         Modifier
             .fillMaxWidth()
             .padding(top = 50.dp)
     ){
-        CustomTitle(tittle = "Terroristas\nPLC", fontSize = 50)
+        CustomTitle(tittle = "Porque usamos\nTerroristas PLC", fontSize = 30)
     }
-
 
 }

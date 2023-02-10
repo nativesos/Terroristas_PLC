@@ -10,12 +10,12 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun CustomTitle(tittle: String){
+fun CustomTitle(tittle: String, fontSize: Int){
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         text = tittle,
-        fontSize = 50.sp,
+        fontSize = fontSize.sp,
         fontFamily = FontFamily.SansSerif
     )
 }

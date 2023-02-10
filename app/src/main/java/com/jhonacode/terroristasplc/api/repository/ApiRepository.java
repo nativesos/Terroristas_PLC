@@ -1,97 +1,40 @@
 package com.jhonacode.terroristasplc.api.repository;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 
-import java.util.*;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-
-import org.w3c.dom.Document;
-
-import java.io.InputStream;
-
+import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class ApiRepository {
-
-
-    public static void convert6(HttpURLConnection connection, Context base) {
-        MainClass mainClass = new MainClass(base);
-        try {
-
-            int status = connection.getResponseCode();
-            if (status == HttpURLConnection.HTTP_OK) {
-
-                // Procesar el XML
-                InputStream inputStream = connection.getInputStream();
-
-                Document document = convertInputStreamToDocument(inputStream);
-                NodeList entries = document.getElementsByTagName("sdnEntry");
-
-
-                for (int i = 0; i < entries.getLength(); i++) {
-                    Node entry = entries.item(i);
-                    NodeList entryData = entry.getChildNodes();
-
-                    Map<String, String> entryMap = new HashMap<>();
-
-                    for (int j = 0; j < entryData.getLength(); j++) {
-                        Node data = entryData.item(j);
-                        String dataName = data.getNodeName();
-                        String dataValue = data.getTextContent();
-
-                        if (dataName.equals("uid") || dataName.equals("firstName") || dataName.equals("lastName") || dataName.equals("sdnType") || dataName.equals("programList")) {
-                            entryMap.put(
-
-                                    dataName
-                                            .replace("       "," ")
-                                            .replace("      "," ")
-                                            .replace("     "," ")
-                                            .replace("    "," ")
-                                            .replace("   "," ")
-                                            .replace("  "," ")
-                                            .trim(),
-                                    dataValue
-                                            .replace("       "," ")
-                                            .replace("      "," ")
-                                            .replace("     "," ")
-                                            .replace("    "," ")
-                                            .replace("   "," ")
-                                            .replace("  "," ")
-                                            .trim()
-                            );
-                        }
-                    }
-
-
-                    mainClass.writeJSONToFile(entryMap, entries, i);
-                }
-
-            } else {
-                System.out.println("Error al obtener el XML");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Ejecuewgfuew8ify78eft32g7f832");
+public class ApiRepository extends ContextWrapper {
+    public ApiRepository(Context base) {
+        super(base);
     }
 
+    final String FILE_NAME = "terroristas.json";
+    final String URI = "https://www.treasury.gov/ofac/downloads/consolidated/consolidated.xml";
 
-    public static Document convertInputStreamToDocument(InputStream inputStream) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
-        try {
-            builder = factory.newDocumentBuilder();
-            return builder.parse(inputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public File file(){
+
+        return new File(getFilesDir(), FILE_NAME);
+
     }
 
+    public HttpURLConnection httpConnection(){
+        HttpURLConnection connection;
+        try {
+            URL url = new URL(URI);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return connection;
+    }
 
 }

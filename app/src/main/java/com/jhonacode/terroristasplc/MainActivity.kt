@@ -10,19 +10,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.jhonacode.terroristasplc.api.repository.ApiRepository
+import com.jhonacode.terroristasplc.api.service.ApiService
+import com.jhonacode.terroristasplc.loading.ui.view.LoadingView
+import com.jhonacode.terroristasplc.starting.ui.view.StartingView
 import com.jhonacode.terroristasplc.ui.theme.TerroristasPLCTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.NodeList
-import org.xml.sax.helpers.DefaultHandler
-import java.io.File
-import java.io.FileWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.parsers.SAXParserFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,32 +53,41 @@ fun DefaultPreview(context: MainActivity) {
 @Composable
 fun LoadingScreen(context: MainActivity){
 
-   // MyScreen()
-   // LoadingView()
-    Button(
+    val apiService: ApiService = ApiService(context)
+    val apiRepository: ApiRepository = ApiRepository(context);
 
-        onClick = {
+    if ( apiService.isDataPresent ){
 
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val url = URL("https://www.treasury.gov/ofac/downloads/consolidated/consolidated.xml")
+        /// Primero comprueba si tiene datos, si no tiene debe salir el textoq ue explica de que va la app
+        /// Luego Salir los requisitos y al darle siguiente debe salir el loading que esta cargando los datos.
+        /// Luego de eso salen los datos en una pantalla
+        /// Luego debe poder buscar por nombre o apellido
+        StartingView()
+     //   LoadingView() /// Solo poner cuando cargan los datos antes de home page
 
-                    val connection = url.openConnection() as HttpURLConnection
-                    connection.requestMethod = "GET"
-                    connection.connect()
-                    ApiRepository.convert6(connection, context)
+    }else {
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
+        Button(
+
+            onClick = {
+
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+
+
+                        apiService.importData(apiRepository.httpConnection())
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
                 }
-                println("Operación de red finalizadaiiiiii")
-            }
 
 
+            }) {
 
-    }) {
-        Text(text = "Load Data")
+            Text(text = "Load Data")
+        }
     }
-
 
 }
