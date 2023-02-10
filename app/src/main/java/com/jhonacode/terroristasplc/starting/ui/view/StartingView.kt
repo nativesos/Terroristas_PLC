@@ -59,7 +59,7 @@ fun StartingView() {
 
     ) {
         StartingBody(
-            imageBody  =  if(page.value == 1) R.drawable.criminal_info else R.drawable.data_error,
+            imageBody  =  if(page.value == 1) R.drawable.search_terrorist else R.drawable.data_error,
             bottonText =  if(page.value == 1) text1 else text2
         )
     }

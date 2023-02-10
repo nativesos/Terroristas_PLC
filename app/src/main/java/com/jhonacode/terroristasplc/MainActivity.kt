@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat.animate
 import com.jhonacode.terroristasplc.api.repository.ApiRepository
 import com.jhonacode.terroristasplc.api.service.ApiService
+import com.jhonacode.terroristasplc.home.ui.HomeView
 import com.jhonacode.terroristasplc.loading.ui.view.LoadingView
 import com.jhonacode.terroristasplc.starting.ui.view.StartingView
 import com.jhonacode.terroristasplc.ui.theme.TerroristasPLCTheme
@@ -55,29 +56,25 @@ fun DefaultPreview(context: MainActivity) {
 }
 
 
-
-
-
 /// Loading Screen
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun LoadingScreen(context: MainActivity){
+fun LoadingScreen(context: MainActivity) {
 
     val apiService: ApiService = ApiService(context)
     val apiRepository: ApiRepository = ApiRepository(context);
 
     /// Esta validacion es solo por test, se debe hacer una inyeccion de dependencias para usar.
     /// las vistas dependiendo de las siguiente variables
-    if ( apiService.isDataPresent ){
+    if (!apiService.isDataPresent) {
 
         /// Primero comprueba si tiene datos, si no tiene debe salir el textoq ue explica de que va la app
         /// Luego Salir los requisitos y al darle siguiente debe salir el loading que esta cargando los datos.
         /// Luego de eso salen los datos en una pantalla
         /// Luego debe poder buscar por nombre o apellido
 
-        LoadingView() /// Solo poner cuando cargan los datos antes de home page
-
-
+        //LoadingView() /// Solo poner cuando cargan los datos antes de home page
+        StartingView()
         /// Formato generado en el terrorista.json
         /**
 
@@ -92,29 +89,39 @@ fun LoadingScreen(context: MainActivity){
 
          */
 
-    }else {
-        StartingView()
-//        Button(
-//
-//            onClick = {
-//
-//                GlobalScope.launch(Dispatchers.IO) {
-//                    try {
-//
-//
-//                        apiService.importData(apiRepository.httpConnection())
-//
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                    }
-//
-//                }
-//
-//
-//            }) {
-//
-//            Text(text = "Load Data")
-//        }
+    } else {
+        // HomeView()
+        //StartingView()
+
+        Box(modifier = Modifier
+            .width(100.dp)
+            .height(100.dp)) {
+            /// Solo por si compilan la aplicacion y quieren ver como formatea la informacion remota.
+            LoadingView()
+            Button(
+
+                onClick = {
+
+                    GlobalScope.launch(Dispatchers.IO) {
+                        try {
+
+
+                            apiService.importData(apiRepository.httpConnection())
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
+                    }
+
+
+                }) {
+
+                Text(text = "Load Data")
+            }
+
+
+        }
     }
 
 }
