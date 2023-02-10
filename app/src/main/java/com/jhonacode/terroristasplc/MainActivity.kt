@@ -66,7 +66,7 @@ fun LoadingScreen(context: MainActivity) {
 
     /// Esta validacion es solo por test, se debe hacer una inyeccion de dependencias para usar.
     /// las vistas dependiendo de las siguiente variables
-    if (!apiService.isDataPresent) {
+    if (apiService.isDataPresent) {
 
         /// Primero comprueba si tiene datos, si no tiene debe salir el textoq ue explica de que va la app
         /// Luego Salir los requisitos y al darle siguiente debe salir el loading que esta cargando los datos.
